@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XALAO — Street Food · Take Away</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F6F1E7;
+    --cream-dark: #EDE5D4;
+    --gold: #C9A96E;
+    --gold-light: #DFC08A;
+    --gold-pale: #F0E4C8;
+    --brown: #6B4F2A;
+    --ink: #1C1810;
+    --ink-soft: #3A3228;
+    --text-body: #4A3F32;
+    --divider: rgba(201,169,110,0.35);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--cream);
+    color: var(--text-body);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ── GRAIN OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* ── LANG SWITCHER ── */
+  .lang-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 14px 40px;
+    background: rgba(246,241,231,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--divider);
+  }
+
+  .lang-toggle {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--gold);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .lang-btn {
+    padding: 8px 20px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: var(--gold);
+    transition: all 0.25s ease;
+  }
+
+  .lang-btn.active {
+    background: var(--gold);
+    color: var(--cream);
+  }
+
+  .lang-btn:not(.active):hover {
+    background: var(--gold-pale);
+  }
+
+  /* ── MENU SECTIONS ── */
+  .menu-section { display: none; }
+  .menu-section.visible { display: block; }
+
+  /* ── HERO HEADER ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 120px 40px 80px;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 60% at 50% 40%, rgba(201,169,110,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 20% 80%, rgba(201,169,110,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 40% at 80% 10%, rgba(201,169,110,0.07) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  /* Decorative botanical SVG lines */
+  .hero-deco {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    opacity: 0.12;
+  }
+
+  .hero-tagline {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 28px;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .hero-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(80px, 14vw, 160px);
+    letter-spacing: 0.18em;
+    color: var(--ink);
+    line-height: 0.9;
+    margin-bottom: 24px;
+    animation: fadeUp 0.9s ease 0.1s both;
+    position: relative;
+  }
+
+  .hero-logo span {
+    color: var(--gold);
+  }
+
+  .hero-sub {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    opacity: 0.7;
+    margin-bottom: 16px;
+    animation: fadeUp 1s ease 0.2s both;
+  }
+
+  .hero-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+    animation: fadeUp 1s ease 0.25s both;
+  }
+  .hero-dots span {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--gold);
+    opacity: 0.6;
+  }
+
+  .hero-line {
+    width: 1px;
+    height: 80px;
+    background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+    margin: 24px auto;
+    animation: fadeUp 1s ease 0.3s both;
+  }
+
+  .hero-phone {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    margin-top: 8px;
+    animation: fadeUp 1s ease 0.35s both;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.5;
+    animation: fadeUp 1.2s ease 0.6s both;
+  }
+  .scroll-hint span {
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .scroll-hint::after {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollLine 1.8s ease infinite;
+  }
+
+  /* ── MENU BODY ── */
+  .menu-body {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 80px 40px 120px;
+  }
+
+  /* ── CHAPTER ── */
+  .chapter {
+    margin-bottom: 80px;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .chapter.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .chapter-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--divider);
+  }
+
+  .chapter-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    opacity: 0.7;
+    white-space: nowrap;
+  }
+
+  .chapter-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+    line-height: 1;
+  }
+
+  .chapter-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .chapter-desc {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    font-style: italic;
+    color: var(--gold);
+    margin-left: auto;
+    text-align: right;
+    max-width: 260px;
+    line-height: 1.5;
+  }
+
+  /* ── DISH GRID ── */
+  .dish-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2px;
+  }
+
+  .dish-grid.single-col {
+    grid-template-columns: 1fr;
+    max-width: 680px;
+  }
+
+  /* ── DISH CARD ── */
+  .dish {
+    padding: 28px 24px;
+    position: relative;
+    border: 1px solid transparent;
+    transition: border-color 0.3s ease, background 0.3s ease;
+    cursor: default;
+  }
+
+  .dish::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 24px; right: 24px;
+    height: 1px;
+    background: var(--divider);
+  }
+
+  .dish:hover {
+    border-color: var(--divider);
+    background: rgba(201,169,110,0.04);
+  }
+
+  .dish-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 8px;
+  }
+
+  .dish-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: 0.03em;
+    line-height: 1.2;
+    flex: 1;
+  }
+
+  .dish-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--gold);
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+  }
+
+  .dish-desc {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10.5px;
+    font-weight: 300;
+    color: var(--text-body);
+    opacity: 0.75;
+    line-height: 1.7;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .dish-half {
+    margin-top: 10px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    font-style: italic;
+    color: var(--gold);
+    opacity: 0.8;
+  }
+
+  .dish-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    background: var(--gold-pale);
+    border: 1px solid var(--gold);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--brown);
+    margin-bottom: 6px;
+    border-radius: 1px;
+  }
+
+  /* ── TORTILLAS SPECIAL ── */
+  .tortilla-block {
+    background: var(--cream-dark);
+    border: 1px solid var(--divider);
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tortilla-block::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+    background: linear-gradient(to bottom, var(--gold), var(--gold-light));
+  }
+
+  .tortilla-note {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    font-style: italic;
+    color: var(--gold);
+    margin-bottom: 24px;
+    letter-spacing: 0.06em;
+  }
+
+  .tortilla-options {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .tortilla-options li {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .tortilla-options li::before {
+    content: '·';
+    color: var(--gold);
+    font-size: 20px;
+  }
+
+  .tortilla-prices {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+
+  .tortilla-price-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .tortilla-price-label {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--text-body);
+    opacity: 0.6;
+  }
+
+  .tortilla-price-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── PAELLA SPECIAL ── */
+  .paella-block {
+    background: linear-gradient(135deg, var(--ink) 0%, var(--ink-soft) 100%);
+    padding: 50px;
+    position: relative;
+    overflow: hidden;
+    color: var(--cream);
+  }
+
+  .paella-block::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 80% at 50% 50%, rgba(201,169,110,0.12), transparent);
+    pointer-events: none;
+  }
+
+  .paella-block .chapter-title {
+    color: var(--cream);
+    margin-bottom: 20px;
+  }
+
+  .paella-block .chapter-title em { color: var(--gold); }
+
+  .paella-desc-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    font-style: italic;
+    color: rgba(246,241,231,0.7);
+    margin-bottom: 28px;
+    line-height: 1.7;
+  }
+
+  .paella-ingredients {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 36px;
+  }
+
+  .paella-ing {
+    padding: 6px 14px;
+    border: 1px solid rgba(201,169,110,0.4);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+  }
+
+  .paella-price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  .paella-price-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(246,241,231,0.4);
+  }
+
+  .paella-price-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 400;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+  }
+
+  .paella-min {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(246,241,231,0.35);
+    margin-bottom: 14px;
+  }
+
+  /* ── ENCARGO BANNER ── */
+  .encargo-banner {
+    background: var(--gold);
+    padding: 18px 40px;
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .encargo-banner p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    font-style: italic;
+    color: var(--ink);
+    letter-spacing: 0.08em;
+  }
+
+  /* ── EMPANADILLAS GRID ── */
+  .empanada-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2px;
+  }
+
+  /* ── SAUCES & EXTRAS ── */
+  .extras-block {
+    background: var(--cream-dark);
+    border-top: 2px solid var(--gold);
+    padding: 40px;
+    margin-top: 60px;
+  }
+
+  .extras-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+  }
+
+  .extras-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .extra-pill {
+    padding: 7px 16px;
+    border: 1px solid var(--divider);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .extra-pill span {
+    color: var(--gold);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  /* ── DRINKS ── */
+  .drinks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 2px;
+  }
+
+  .drink-item {
+    padding: 20px;
+    border-bottom: 1px solid var(--divider);
+  }
+
+  .drink-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+
+  .drink-price {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+  }
+
+  /* ── KIDS MENU ── */
+  .kids-block {
+    border: 1px solid var(--divider);
+    padding: 36px;
+    position: relative;
+  }
+
+  .kids-block::before {
+    content: 'KIDS';
+    position: absolute;
+    top: -12px; left: 36px;
+    background: var(--cream);
+    padding: 0 12px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.4em;
+    color: var(--gold);
+  }
+
+  .kids-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 8px;
+  }
+
+  .kids-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .kids-item-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    color: var(--ink);
+  }
+
+  .kids-item-price {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+  }
+
+  .kids-note {
+    margin-top: 16px;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-body);
+    opacity: 0.5;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 80px 40px;
+    text-align: center;
+  }
+
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 52px;
+    font-weight: 300;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+
+  .footer-tag {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    color: rgba(246,241,231,0.35);
+    margin-bottom: 32px;
+  }
+
+  .footer-line {
+    width: 60px;
+    height: 1px;
+    background: var(--gold);
+    margin: 0 auto 32px;
+    opacity: 0.4;
+  }
+
+  .footer-phone {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    color: var(--gold-light);
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+
+  .footer-copy {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(246,241,231,0.2);
+    margin-top: 40px;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes scrollLine {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    51% { transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  /* ── SECTION DIVIDER ── */
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin: 80px 0;
+  }
+
+  .section-divider::before, .section-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    opacity: 0.4;
+  }
+
+  .section-divider-icon {
+    color: var(--gold);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    opacity: 0.6;
+    letter-spacing: 0.3em;
+  }
+
+  /* ── XALADILLOS special layout ── */
+  .xaladillos-note {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    font-style: italic;
+    color: var(--gold);
+    text-align: center;
+    margin-bottom: 36px;
+    padding: 20px;
+    border-top: 1px solid var(--divider);
+    border-bottom: 1px solid var(--divider);
+  }
+
+  /* Responsive */
+  @media (max-width: 700px) {
+    .lang-bar { padding: 12px 20px; }
+    .menu-body { padding: 60px 20px 80px; }
+    .hero { padding: 100px 24px 60px; }
+    .paella-block, .tortilla-block { padding: 28px; }
+    .dish-grid { grid-template-columns: 1fr; }
+    .chapter-header { flex-wrap: wrap; }
+    .chapter-desc { margin-left: 0; text-align: left; }
+    .tortilla-prices { flex-direction: column; gap: 20px; }
+    .kids-items { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Language Switcher -->
+<div class="lang-bar">
+  <div class="lang-toggle">
+    <button class="lang-btn active" id="btn-es" onclick="switchLang('es')">ES</button>
+    <button class="lang-btn" id="btn-en" onclick="switchLang('en')">EN</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     HERO
+════════════════════════════════════════ -->
+<div class="hero">
+  <!-- Decorative SVG botanical lines -->
+  <svg class="hero-deco" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="100" cy="400" rx="180" ry="340" stroke="#C9A96E" stroke-width="0.8"/>
+    <ellipse cx="1100" cy="400" rx="180" ry="340" stroke="#C9A96E" stroke-width="0.8"/>
+    <path d="M100 200 Q300 100 600 180 Q900 260 1100 150" stroke="#C9A96E" stroke-width="0.5" fill="none"/>
+    <path d="M100 600 Q300 700 600 620 Q900 540 1100 660" stroke="#C9A96E" stroke-width="0.5" fill="none"/>
+    <circle cx="600" cy="400" r="200" stroke="#C9A96E" stroke-width="0.4" stroke-dasharray="4 8"/>
+    <circle cx="600" cy="400" r="290" stroke="#C9A96E" stroke-width="0.3" stroke-dasharray="2 12"/>
+  </svg>
+
+  <p class="hero-tagline">Street Food · Take Away</p>
+  <h1 class="hero-logo">X<span>A</span>LAO</h1>
+  <p class="hero-sub">Gastronomía · Sabor · Cultura</p>
+  <div class="hero-dots">
+    <span></span><span></span><span></span>
+  </div>
+  <div class="hero-line"></div>
+  <p class="hero-phone">633 300 228</p>
+  <div class="scroll-hint">
+    <span>Carta</span>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SPANISH MENU
+════════════════════════════════════════ -->
+<div class="menu-section visible" id="menu-es">
+  <div class="menu-body">
+
+    <!-- ── AL LIO ── -->
+    <div class="chapter" id="ch-es-1">
+      <div class="chapter-header">
+        <span class="chapter-number">01</span>
+        <h2 class="chapter-title">Al <em>Lío</em></h2>
+      </div>
+
+      <div class="dish-grid">
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">Patatas Fritas</span>
+            <span class="dish-price">4,50 €</span>
+          </div>
+          <p class="dish-desc">Elige entre nuestras salxas</p>
+        </div>
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">Las Papas Trufadas</span>
+            <span class="dish-price">8,90 €</span>
+          </div>
+          <p class="dish-desc">Patatas crujientes · Mayo trufada casera · Parmesano · Salxa Japo secreta · Cecina</p>
+        </div>
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">Pollo Frito Koreano</span>
+            <span class="dish-price">8,90 €</span>
+          </div>
+          <p class="dish-desc">Crujiente y jugoso con toque especial · Salxa umami koreana</p>
+          <p class="dish-half">Media ración — 5,00 €</p>
+        </div>
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">Alitas Xatori</span>
+            <span class="dish-price">9,90 €</span>
+          </div>
+          <p class="dish-desc">Alitas de pollo glaseadas con nuestra salxa japonesa</p>
+          <p class="dish-half">Media ración — 5,50 €</p>
+        </div>
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">Las Croquetas de Xalao</span>
+            <span class="dish-price">9,90 €</span>
+          </div>
+          <p class="dish-desc">Jamón Ibérico · Cecina · Morcilla · Boletus · Queso Azul</p>
+          <p class="dish-half">Media ración — 5,50 €</p>
+        </div>
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">Enxaladilla de Piparra</span>
+            <span class="dish-price">8,90 €</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="section-divider"><span class="section-divider-icon">· · ·</span></div>
+
+    <!-- ── PESCAITO ── -->
+    <div class="chapter" id="ch-es-2">
+      <div class="chapter-header">
+        <span class="chapter-number">02</span>
+        <h2 class="chapter-title">Pesca<em>íto</em></h2>
+        <p class="chapter-desc">Del sur, con sabor atlántico</p>
+      </div>
+
+      <div class="dish-grid">
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">Cazón en Adobo</span>
+            <span class="dish-price">9,90 €</span>
+          </div>
+          <p class="dish-desc">Pescaíto típico del sur, en adobo y frito · Receta clásica de Cádiz</p>
+          <p class="dish-half">Media ración — 5,50 €</p>
+        </div>
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">Gambón Kimchi</span>
+            <span class="dish-price">9,90 €</span>
+          </div>
+          <p class="dish-desc">Gambón en tempura y rebozado en panko · Con xalsa kimchi</p>
+          <p class="dish-half">Media ración — 5,50 €</p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="section-divider"><span class="section-divider-icon">· · ·</span></div>
+
+    <!-- ── XALADILLOS ── -->
+    <div class="chapter" id="ch-es-3">
+      <div class="chapter-header">
+        <span class="chapter-number">03</span>
+        <h2 class="chapter-title">Xalad<em>illos</em></h2>
+      </div>
+
+      <div class="xaladillos-note">
+        "Bocadillos en pan gallego artesano, crujiente y esponjoso"
+      </div>
+
+      <div class="dish-grid single-col">
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">Serranito</span>
+            <span class="dish-price">9,90 €</span>
+          </div>
+          <p class="dish-desc">Lomo de cerdo · Alioli · Tomate · Pimiento verde · Jamón ibérico</p>
+        </div>
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">El Pejino</span>
+            <span class="dish-price">10,90 €</span>
+          </div>
+          <p class="dish-desc">Bonito del norte en aceite de oliva · Pimiento del piquillo · Piparra · Anchoa de Laredo · Mayonesa de piparra</p>
+        </div>
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">El Morocco</span>
+            <span class="dish-price">8,90 €</span>
+          </div>
+          <p class="dish-desc">Pan de pita artesanal · Solomillo de cerdo · Especias morunas · Remolacha · Zanahoria · Cebolla roja · Salxa árabe</p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="section-divider"><span class="section-divider-icon">· · ·</span></div>
+
+    <!-- ── TORTILLAS ── -->
+    <div class="chapter" id="ch-es-4">
+      <div class="chapter-header">
+        <span class="chapter-number">04</span>
+        <h2 class="chapter-title">Tort<em>illas</em></h2>
+      </div>
+
+      <div class="encargo-banner">
+        <p>Por encargo el día antes · Tortillas y Paellas</p>
+      </div>
+
+      <div class="tortilla-block">
+        <p class="tortilla-note">La mejor variedad de patata con huevos camperos del Asón</p>
+        <ul class="tortilla-options">
+          <li>Trufada con Parmesano</li>
+          <li>Queso Azul</li>
+          <li>Gambón al Ajillo</li>
+          <li>La Paisana</li>
+          <li>Sola con o sin cebolla</li>
+        </ul>
+        <div class="tortilla-prices">
+          <div class="tortilla-price-item">
+            <span class="tortilla-price-label">Grande</span>
+            <span class="tortilla-price-val">19,90 €</span>
+          </div>
+          <div class="tortilla-price-item">
+            <span class="tortilla-price-label">Mediana</span>
+            <span class="tortilla-price-val">10,90 €</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider"><span class="section-divider-icon">· · ·</span></div>
+
+    <!-- ── PAELLA ── -->
+    <div class="chapter" id="ch-es-5">
+      <div class="paella-block">
+        <div class="chapter-header" style="border-bottom-color: rgba(201,169,110,0.2)">
+          <span class="chapter-number" style="color:var(--gold)">05</span>
+          <h2 class="chapter-title" style="color:var(--cream)">Paella <em>Marxalao</em></h2>
+        </div>
+        <p class="paella-desc-text">De marisco, con arroz de la Albufera</p>
+        <div class="paella-ingredients">
+          <span class="paella-ing">Cigala</span>
+          <span class="paella-ing">Gamba</span>
+          <span class="paella-ing">Gambón</span>
+          <span class="paella-ing">Calamar</span>
+          <span class="paella-ing">Mejillón</span>
+        </div>
+        <p class="paella-min">Mínimo 2 raciones</p>
+        <div class="paella-price-row">
+          <span class="paella-price-label">Precio por ración</span>
+          <span class="paella-price-val">&nbsp;15,90 €</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider"><span class="section-divider-icon">· · ·</span></div>
+
+    <!-- ── EMPANADILLAS ── -->
+    <div class="chapter" id="ch-es-6">
+      <div class="chapter-header">
+        <span class="chapter-number">06</span>
+        <h2 class="chapter-title">Empana<em>dillas</em></h2>
+      </div>
+
+      <div class="empanada-grid">
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">Criolla</span>
+            <span class="dish-price">3,50 €</span>
+          </div>
+          <p class="dish-desc">Carne de ternera · Cebolla · Huevo cocido · Aceitunas · Saborazo</p>
+        </div>
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">La Morocca</span>
+            <span class="dish-price">3,50 €</span>
+          </div>
+          <p class="dish-desc">Carne de ternera con auténticas especias morunas · Remolacha · Zanahoria</p>
+        </div>
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">Thai</span>
+            <span class="dish-price">3,50 €</span>
+          </div>
+          <p class="dish-desc">Pollo al curry amarillo tailandés con leche de coco · Calabacín · Zanahoria</p>
+        </div>
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">Capri</span>
+            <span class="dish-price">3,50 €</span>
+          </div>
+          <p class="dish-desc">Mozzarella · Tomatitos cherry · Albahaca fresca · Aceituna negra</p>
+        </div>
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">Burgalesa</span>
+            <span class="dish-price">3,50 €</span>
+          </div>
+          <p class="dish-desc">Morcilla de Burgos · Cebolla caramelizada · Pimiento del piquillo · Quesuco tierno de la Tierruca</p>
+        </div>
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">La Riquiña</span>
+            <span class="dish-price">4,00 €</span>
+          </div>
+          <p class="dish-desc">Bonito del norte en aceite de oliva con sofrito de pimientos, cebolla y tomate</p>
+        </div>
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">Carrillera</span>
+            <span class="dish-price">4,00 €</span>
+          </div>
+          <p class="dish-desc">Guiso de carrilleras de cerdo con puré de patata</p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="section-divider"><span class="section-divider-icon">· · ·</span></div>
+
+    <!-- ── HAMBURGUESAS ── -->
+    <div class="chapter" id="ch-es-7">
+      <div class="chapter-header">
+        <span class="chapter-number">07</span>
+        <h2 class="chapter-title">Hambur<em>guesas</em></h2>
+      </div>
+
+      <div class="dish-grid">
+
+        <div class="dish">
+          <span class="dish-tag">Firma</span>
+          <div class="dish-row">
+            <span class="dish-name">Doble Chiss</span>
+            <span class="dish-price">9,90 €</span>
+          </div>
+          <p class="dish-desc">Doble ternera smash · Bacon · Cheddar · Salxalao</p>
+        </div>
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">Gran Xaladita</span>
+            <span class="dish-price">10,90 €</span>
+          </div>
+          <p class="dish-desc">Medallón de vaca · Lechuga · Tomate · Cebolla roja · Cheddar · Nuestras salxas</p>
+        </div>
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">Pollito Chiss</span>
+            <span class="dish-price">9,90 €</span>
+          </div>
+          <p class="dish-desc">Pollito super crujiente · Lechuga · Bacon · Cheddar · Pepinillo · Salxalao</p>
+        </div>
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">La Pichona</span>
+            <span class="dish-price">12,90 €</span>
+          </div>
+          <p class="dish-desc">Pollito super crujiente glaseado con Salxa Japo · Enxalada de col · Salxalao · Queso Cheddar · Crujiente de Kikos · Cebolla encurtida · Salxa Emmy</p>
+        </div>
+
+        <div class="dish">
+          <span class="dish-tag">Premium</span>
+          <div class="dish-row">
+            <span class="dish-name">La Señorita</span>
+            <span class="dish-price">13,90 €</span>
+          </div>
+          <p class="dish-desc">Medallón de vaca · Rúcula · Alioli ligero · Tomate · Quesuco tierno de la Tierruca · Pimiento verde · Jamón ibérico · Salxa Emmy</p>
+        </div>
+
+        <div class="dish">
+          <span class="dish-tag">Premium</span>
+          <div class="dish-row">
+            <span class="dish-name">La Picantona</span>
+            <span class="dish-price">13,90 €</span>
+          </div>
+          <p class="dish-desc">Medallón de vaca · Salxalao · Quesuco tierno de la Tierruca · Chimichurri · Cebolla frita · Pimiento del piquillo · Huevo campero del Asón a la plancha con yema líquida · Salxa Picantona</p>
+        </div>
+
+        <div class="dish">
+          <span class="dish-tag">Premium</span>
+          <div class="dish-row">
+            <span class="dish-name">La Sobrada</span>
+            <span class="dish-price">13,90 €</span>
+          </div>
+          <p class="dish-desc">Doble ternera smash · Lechuga · Tomate · Pepinillo · Queso Cheddar · Bacon · Huevo campero del Asón a la plancha · Cebolla crujiente · Salxalao</p>
+        </div>
+
+        <div class="dish">
+          <span class="dish-tag">Premium</span>
+          <div class="dish-row">
+            <span class="dish-name">La Villana</span>
+            <span class="dish-price">13,90 €</span>
+          </div>
+          <p class="dish-desc">Doble ternera smash · Alioli ligero · Lechuga morada · Quesos Cheddar y de la Tierruca · Bacon · Carrillera de cerdo</p>
+        </div>
+
+        <div class="dish">
+          <span class="dish-tag">Premium</span>
+          <div class="dish-row">
+            <span class="dish-name">La Bellota</span>
+            <span class="dish-price">13,90 €</span>
+          </div>
+          <p class="dish-desc">Medallón de vaca · Salxalao · Panceta de bellota 100% ibérico · Queso ahumado · Salxa oscura · Mayo trufada casera · Parmesano</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── KIDS ── -->
+    <div class="section-divider"><span class="section-divider-icon">· · ·</span></div>
+
+    <div class="chapter" id="ch-es-8">
+      <div class="kids-block">
+        <div class="kids-items">
+          <div class="kids-item">
+            <span class="kids-item-name">Hamburguesa con Queso</span>
+            <span class="kids-item-price">7,90 €</span>
+          </div>
+          <div class="kids-item">
+            <span class="kids-item-name">Pollo Frito</span>
+            <span class="kids-item-price">7,90 €</span>
+          </div>
+          <div class="kids-item">
+            <span class="kids-item-name">Croquetas</span>
+            <span class="kids-item-price">7,90 €</span>
+          </div>
+        </div>
+        <p class="kids-note">+ Patatas Fritas incluidas</p>
+      </div>
+    </div>
+
+    <!-- ── BEBIDAS & EXTRAS ── -->
+    <div class="section-divider"><span class="section-divider-icon">· · ·</span></div>
+
+    <div class="chapter" id="ch-es-9">
+      <div class="chapter-header">
+        <span class="chapter-number">08</span>
+        <h2 class="chapter-title">Bebidas <em>&amp; Extras</em></h2>
+      </div>
+
+      <div class="drinks-grid">
+        <div class="drink-item">
+          <p class="drink-name">Refrescos 33cl</p>
+          <p class="drink-price">2,50 €</p>
+        </div>
+        <div class="drink-item">
+          <p class="drink-name">Estrella Galicia 33cl</p>
+          <p class="drink-price">2,50 €</p>
+        </div>
+        <div class="drink-item">
+          <p class="drink-name">Voll-Damm 33cl</p>
+          <p class="drink-price">2,80 €</p>
+        </div>
+        <div class="drink-item">
+          <p class="drink-name">Solán de Cabras 0.5L</p>
+          <p class="drink-price">2,00 €</p>
+        </div>
+        <div class="drink-item">
+          <p class="drink-name">Solán de Cabras 1.5L</p>
+          <p class="drink-price">3,50 €</p>
+        </div>
+      </div>
+
+      <div class="extras-block">
+        <p class="extras-title">Nuestras Salxas</p>
+        <div class="extras-row">
+          <div class="extra-pill">Salxalao <span>0,80 €</span></div>
+          <div class="extra-pill">Koreana <span>0,80 €</span></div>
+          <div class="extra-pill">Picantona <span>0,80 €</span></div>
+          <div class="extra-pill">Emmy <span>0,80 €</span></div>
+          <div class="extra-pill">Alioli <span>0,80 €</span></div>
+          <div class="extra-pill">Trufada <span>0,80 €</span></div>
+          <div class="extra-pill">Árabe <span>0,80 €</span></div>
+        </div>
+        <p class="extras-title" style="margin-top:28px">Complementos</p>
+        <div class="extras-row">
+          <div class="extra-pill">Complemento <span>0,50 €</span></div>
+          <div class="extra-pill">Huevo <span>1,00 €</span></div>
+          <div class="extra-pill">Pan <span>2,00 €</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /menu-body -->
+</div><!-- /menu-es -->
+
+
+<!-- ════════════════════════════════════════
+     ENGLISH MENU
+════════════════════════════════════════ -->
+<div class="menu-section" id="menu-en">
+  <div class="menu-body">
+
+    <!-- ── LET'S GET STARTED ── -->
+    <div class="chapter">
+      <div class="chapter-header">
+        <span class="chapter-number">01</span>
+        <h2 class="chapter-title">Let's Get <em>Started</em></h2>
+      </div>
+
+      <div class="dish-grid">
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">Chips</span>
+            <span class="dish-price">4.50 €</span>
+          </div>
+          <p class="dish-desc">Choose from our homemade sauces</p>
+        </div>
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">Truffle Chips</span>
+            <span class="dish-price">8.90 €</span>
+          </div>
+          <p class="dish-desc">Crispy fries · Homemade truffle mayo · Parmesan · Secret Japo sauce · Cecina</p>
+        </div>
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">Korean Fried Chicken</span>
+            <span class="dish-price">8.90 €</span>
+          </div>
+          <p class="dish-desc">Crispy outside, juicy inside · Special Korean umami sauce</p>
+          <p class="dish-half">Half portion — 5.00 €</p>
+        </div>
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">Xatori Wings</span>
+            <span class="dish-price">9.90 €</span>
+          </div>
+          <p class="dish-desc">Chicken wings glazed with our homemade Japanese-style sauce</p>
+          <p class="dish-half">Half portion — 5.50 €</p>
+        </div>
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">Croquettes</span>
+            <span class="dish-price">9.90 €</span>
+          </div>
+          <p class="dish-desc">Iberian Ham · Cecina · Blood Sausage · Boletus · Blue Cheese</p>
+          <p class="dish-half">Half portion — 5.50 €</p>
+        </div>
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">Enxaladilla</span>
+            <span class="dish-price">8.90 €</span>
+          </div>
+          <p class="dish-desc">Roasted potato · Carrot · Egg · Line-caught tuna in olive oil · Olives · Piparra peppers · Homemade piparra mayo</p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="section-divider"><span class="section-divider-icon">· · ·</span></div>
+
+    <!-- ── PESCAITO ── -->
+    <div class="chapter">
+      <div class="chapter-header">
+        <span class="chapter-number">02</span>
+        <h2 class="chapter-title">Pesca<em>íto</em></h2>
+        <p class="chapter-desc">Southern flavours, Atlantic soul</p>
+      </div>
+
+      <div class="dish-grid">
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">Cazón en Adobo</span>
+            <span class="dish-price">9.90 €</span>
+          </div>
+          <p class="dish-desc">Southern-style marinated fish, fried · Classic Cádiz recipe</p>
+          <p class="dish-half">Half portion — 5.50 €</p>
+        </div>
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">Kimchi King Prawns</span>
+            <span class="dish-price">9.90 €</span>
+          </div>
+          <p class="dish-desc">King prawns in tempura, coated in panko breadcrumbs · Kimchi sauce</p>
+          <p class="dish-half">Half portion — 5.50 €</p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="section-divider"><span class="section-divider-icon">· · ·</span></div>
+
+    <!-- ── XALADILLOS ── -->
+    <div class="chapter">
+      <div class="chapter-header">
+        <span class="chapter-number">03</span>
+        <h2 class="chapter-title">Xalad<em>illos</em></h2>
+      </div>
+
+      <div class="xaladillos-note">
+        "Sandwiches in handmade Galician bread — crispy outside, soft inside"
+      </div>
+
+      <div class="dish-grid single-col">
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">Serranito</span>
+            <span class="dish-price">9.90 €</span>
+          </div>
+          <p class="dish-desc">Pork loin · Alioli · Tomato · Green pepper · Iberian ham</p>
+        </div>
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">El Pejino</span>
+            <span class="dish-price">10.90 €</span>
+          </div>
+          <p class="dish-desc">Line-caught tuna in olive oil · Piquillo peppers · Piparra · Anchovy from Laredo · Piparra mayo</p>
+        </div>
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">El Morocco</span>
+            <span class="dish-price">8.90 €</span>
+          </div>
+          <p class="dish-desc">Handmade pita bread · Pork tenderloin · Moorish spices · Beetroot · Carrot · Red onion · Arabic-style sauce</p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="section-divider"><span class="section-divider-icon">· · ·</span></div>
+
+    <!-- ── SPANISH OMELETTES ── -->
+    <div class="chapter">
+      <div class="chapter-header">
+        <span class="chapter-number">04</span>
+        <h2 class="chapter-title">Spanish <em>Omelettes</em></h2>
+      </div>
+
+      <div class="encargo-banner">
+        <p>Made to order · Pre-order the day before · Omelettes &amp; Paellas</p>
+      </div>
+
+      <div class="tortilla-block">
+        <p class="tortilla-note">The finest potatoes with free-range eggs from the Cantabria region</p>
+        <ul class="tortilla-options">
+          <li>Truffle &amp; Parmesan</li>
+          <li>Blue Cheese</li>
+          <li>Garlic King Prawns</li>
+          <li>With red &amp; green peppers, and onion</li>
+          <li>Plain, with or without onion</li>
+        </ul>
+        <div class="tortilla-prices">
+          <div class="tortilla-price-item">
+            <span class="tortilla-price-label">Large</span>
+            <span class="tortilla-price-val">19.90 €</span>
+          </div>
+          <div class="tortilla-price-item">
+            <span class="tortilla-price-label">Medium</span>
+            <span class="tortilla-price-val">10.90 €</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider"><span class="section-divider-icon">· · ·</span></div>
+
+    <!-- ── PAELLA ── -->
+    <div class="chapter">
+      <div class="paella-block">
+        <div class="chapter-header" style="border-bottom-color: rgba(201,169,110,0.2)">
+          <span class="chapter-number" style="color:var(--gold)">05</span>
+          <h2 class="chapter-title" style="color:var(--cream)">Paella <em>Marxalao</em></h2>
+        </div>
+        <p class="paella-desc-text">Seafood paella made with Albufera rice</p>
+        <div class="paella-ingredients">
+          <span class="paella-ing">Langoustine</span>
+          <span class="paella-ing">Prawns</span>
+          <span class="paella-ing">King Prawns</span>
+          <span class="paella-ing">Squid</span>
+          <span class="paella-ing">Mussels</span>
+        </div>
+        <p class="paella-min">Minimum 2 portions</p>
+        <div class="paella-price-row">
+          <span class="paella-price-label">Price per portion</span>
+          <span class="paella-price-val">&nbsp;15.90 €</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider"><span class="section-divider-icon">· · ·</span></div>
+
+    <!-- ── EMPANADILLAS EN ── -->
+    <div class="chapter">
+      <div class="chapter-header">
+        <span class="chapter-number">06</span>
+        <h2 class="chapter-title">Empana<em>dillas</em></h2>
+      </div>
+
+      <div class="empanada-grid">
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">Criolla</span>
+            <span class="dish-price">3.50 €</span>
+          </div>
+          <p class="dish-desc">Beef · Onion · Boiled egg · Olives · Big flavour!</p>
+        </div>
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">La Morocca</span>
+            <span class="dish-price">3.50 €</span>
+          </div>
+          <p class="dish-desc">Beef with authentic Moorish spices · Beetroot · Carrot</p>
+        </div>
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">Thai</span>
+            <span class="dish-price">3.50 €</span>
+          </div>
+          <p class="dish-desc">Thai yellow curry chicken with coconut milk · Courgette · Carrot</p>
+        </div>
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">Capri</span>
+            <span class="dish-price">3.50 €</span>
+          </div>
+          <p class="dish-desc">Mozzarella · Cherry tomatoes · Fresh basil · Black olive</p>
+        </div>
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">Burgalesa</span>
+            <span class="dish-price">3.50 €</span>
+          </div>
+          <p class="dish-desc">Burgos black pudding · Caramelised onion · Piquillo pepper · Local semi-cured cheese</p>
+        </div>
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">La Riquiña</span>
+            <span class="dish-price">4.00 €</span>
+          </div>
+          <p class="dish-desc">Line-caught tuna in olive oil with a pepper, onion and tomato sofrito</p>
+        </div>
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">Carrillera</span>
+            <span class="dish-price">4.00 €</span>
+          </div>
+          <p class="dish-desc">Slow-cooked pork cheeks in a Tempranillo and Fino wine reduction · Mashed potato</p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="section-divider"><span class="section-divider-icon">· · ·</span></div>
+
+    <!-- ── BURGERS EN ── -->
+    <div class="chapter">
+      <div class="chapter-header">
+        <span class="chapter-number">07</span>
+        <h2 class="chapter-title">Bur<em>gers</em></h2>
+      </div>
+
+      <div class="dish-grid">
+
+        <div class="dish">
+          <span class="dish-tag">Signature</span>
+          <div class="dish-row">
+            <span class="dish-name">Doble Chiss</span>
+            <span class="dish-price">9.90 €</span>
+          </div>
+          <p class="dish-desc">Double 100% beef · Bacon · Cheddar · Xalao sauce</p>
+        </div>
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">Gran Xaladita</span>
+            <span class="dish-price">10.90 €</span>
+          </div>
+          <p class="dish-desc">100% beef · Lettuce · Tomato · Red onion · Cheddar · Our sauces</p>
+        </div>
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">Pollito Chiss</span>
+            <span class="dish-price">9.90 €</span>
+          </div>
+          <p class="dish-desc">Super-crispy chicken · Lettuce · Bacon · Cheddar · Gherkin · Xalao sauce</p>
+        </div>
+
+        <div class="dish">
+          <div class="dish-row">
+            <span class="dish-name">La Pichona</span>
+            <span class="dish-price">12.90 €</span>
+          </div>
+          <p class="dish-desc">Super crispy chicken glazed with Japo sauce · Coleslaw · Xalao sauce · Cheddar · Crunchy Kikos · Pickled onion · Emmy sauce</p>
+        </div>
+
+        <div class="dish">
+          <span class="dish-tag">Premium</span>
+          <div class="dish-row">
+            <span class="dish-name">La Señorita</span>
+            <span class="dish-price">13.90 €</span>
+          </div>
+          <p class="dish-desc">100% beef · Rocket · Light alioli · Tomato · Local semi-cured cheese · Green pepper · Iberian ham · Emmy sauce</p>
+        </div>
+
+        <div class="dish">
+          <span class="dish-tag">Premium</span>
+          <div class="dish-row">
+            <span class="dish-name">La Picantona</span>
+            <span class="dish-price">13.90 €</span>
+          </div>
+          <p class="dish-desc">100% beef · Xalao sauce · Local semi-cured cheese · Chimichurri · Crispy onion · Piquillo pepper · Fried egg with runny yolk · Picantona sauce</p>
+        </div>
+
+        <div class="dish">
+          <span class="dish-tag">Premium</span>
+          <div class="dish-row">
+            <span class="dish-name">La Sobrada</span>
+            <span class="dish-price">13.90 €</span>
+          </div>
+          <p class="dish-desc">Double 100% beef · Lettuce · Tomato · Gherkin · Cheddar · Bacon · Fried egg · Crispy onion · Xalao sauce</p>
+        </div>
+
+        <div class="dish">
+          <span class="dish-tag">Premium</span>
+          <div class="dish-row">
+            <span class="dish-name">La Villana</span>
+            <span class="dish-price">13.90 €</span>
+          </div>
+          <p class="dish-desc">Double 100% beef · Light alioli · Purple lettuce · Two cheeses (Cheddar + Local) · Bacon · Slow-cooked pork cheek</p>
+        </div>
+
+        <div class="dish">
+          <span class="dish-tag">Premium</span>
+          <div class="dish-row">
+            <span class="dish-name">La Bellota</span>
+            <span class="dish-price">13.90 €</span>
+          </div>
+          <p class="dish-desc">100% beef · Xalao sauce · 100% Iberian acorn-fed pancetta · Smoked cheese · Dark sauce · Homemade truffle mayo · Parmesan</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── KIDS EN ── -->
+    <div class="section-divider"><span class="section-divider-icon">· · ·</span></div>
+
+    <div class="chapter">
+      <div class="kids-block">
+        <div class="kids-items">
+          <div class="kids-item">
+            <span class="kids-item-name">Cheeseburger</span>
+            <span class="kids-item-price">7.90 €</span>
+          </div>
+          <div class="kids-item">
+            <span class="kids-item-name">Fried Chicken</span>
+            <span class="kids-item-price">7.90 €</span>
+          </div>
+          <div class="kids-item">
+            <span class="kids-item-name">Croquettes</span>
+            <span class="kids-item-price">7.90 €</span>
+          </div>
+        </div>
+        <p class="kids-note">+ Chips included</p>
+      </div>
+    </div>
+
+    <!-- ── DRINKS & EXTRAS EN ── -->
+    <div class="section-divider"><span class="section-divider-icon">· · ·</span></div>
+
+    <div class="chapter">
+      <div class="chapter-header">
+        <span class="chapter-number">08</span>
+        <h2 class="chapter-title">Drinks <em>&amp; Extras</em></h2>
+      </div>
+
+      <div class="drinks-grid">
+        <div class="drink-item">
+          <p class="drink-name">Soft Drinks</p>
+          <p class="drink-price">2.50 €</p>
+        </div>
+        <div class="drink-item">
+          <p class="drink-name">Beer</p>
+          <p class="drink-price">2.80 €</p>
+        </div>
+        <div class="drink-item">
+          <p class="drink-name">Water</p>
+          <p class="drink-price">2.00 €</p>
+        </div>
+      </div>
+
+      <div class="extras-block">
+        <p class="extras-title">Our Sauces</p>
+        <div class="extras-row">
+          <div class="extra-pill">Salxalao <span>0.80 €</span></div>
+          <div class="extra-pill">Korean <span>0.80 €</span></div>
+          <div class="extra-pill">Picantona <span>0.80 €</span></div>
+          <div class="extra-pill">Emmy <span>0.80 €</span></div>
+          <div class="extra-pill">Alioli <span>0.80 €</span></div>
+        </div>
+        <p class="extras-title" style="margin-top:28px">Extras</p>
+        <div class="extras-row">
+          <div class="extra-pill">Extra <span>0.50 €</span></div>
+          <div class="extra-pill">Egg <span>1.00 €</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /menu-body -->
+</div><!-- /menu-en -->
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-logo">XALAO</div>
+  <p class="footer-tag">Street Food · Take Away · Gastronomía</p>
+  <div class="footer-line"></div>
+  <p class="footer-phone">633 300 228</p>
+  <p class="footer-copy">© Xalao Street Food · Todos los derechos reservados</p>
+</footer>
+
+<script>
+  // Language switcher
+  function switchLang(lang) {
+    document.getElementById('menu-es').classList.toggle('visible', lang === 'es');
+    document.getElementById('menu-en').classList.toggle('visible', lang === 'en');
+    document.getElementById('btn-es').classList.toggle('active', lang === 'es');
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    window.scrollTo({ top: document.querySelector('.hero').offsetHeight, behavior: 'smooth' });
+  }
+
+  // Scroll-triggered chapter reveals
+  const chapters = document.querySelectorAll('.chapter');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+      }
+    });
+  }, { threshold: 0.08 });
+
+  chapters.forEach(ch => observer.observe(ch));
+</script>
+</body>
+</html>
